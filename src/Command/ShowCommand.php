@@ -13,14 +13,14 @@ class ShowCommand extends Cart
 {
     protected function configure()
     {
-        $this->setName('show')
+        $this->setName('cart')
             ->setDescription('Shows a table of products')
             ->setHelp('This command prints a table of products');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->showProducts($input, $output);
+        $this->showCart($input, $output);
         
         return 0;
     }

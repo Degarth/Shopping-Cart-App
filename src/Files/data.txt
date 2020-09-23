@@ -1,4 +1,3 @@
-
 mbp1;Macbook Pro;2;29.99;EUR:
 zen1;Asus Zenbook;3;99.99;USD:
 mbp2;Macbook Pro;5;100.09;GBP:
@@ -6,4 +5,4 @@ zen2;Asus Zenbook;-1;;:
 len;Lenovo P1;8;60.33;USD:
 zen3;Asus Zenbook;1;120.99;EUR:
 akd;Lord of the Rings;1;9.99;GBP:
-tiv;Steel Sword;-1;1000;USD:
+tiv;Steel Sword;1;1000;USD:
