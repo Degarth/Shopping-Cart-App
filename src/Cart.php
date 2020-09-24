@@ -25,7 +25,7 @@ class Cart extends SymfonyCommand
             '======================**** CART ****======================',
         ]);
 
-        $this->productTable($output);
+        $this->productTable($output);  //Outputs product table in a nice way
 
         $output->writeln(['Total: '.$this->getBalance()]);
     }
@@ -63,11 +63,11 @@ class Cart extends SymfonyCommand
         for($i = 0; $i < count($products); $i++) 
             if((int)$quantity[$i] > 0)
             {
-                $quant_price = (int)$quantity[$i]*(double)$price[$i];
+                $quant_price = (int)$quantity[$i]*(double)$price[$i];   // Product price
 
                 for($j = 0; $j < count($supported_currencies); $j++)
-                    if($item_currency[$i] == $supp_currency[$j])
-                        $sum += $quant_price/$rate[$j];
+                    if($item_currency[$i] == $supp_currency[$j])             
+                        $sum += $quant_price/$rate[$j];            // Product price after exchange to EUR
             }
 
         return round($sum, 2).' EUR';
@@ -227,13 +227,23 @@ class Cart extends SymfonyCommand
 
         $this->productTable($output); //++
 
+        // ID input
         $helper = $this->getHelper('question');
         $id_question = new Question("Enter ID of a product you want to update: ", "error"); 
         $id_to_update = $helper->ask($input, $output, $id_question);
         
-        if(in_array($id_to_update, $ids))
+        if(in_array($id_to_update, $ids))   //if ID exists
         {
             $quantity_question = new Question("Enter new quantity: ", "error"); 
+            $quantity_question->setValidator(function ($answer) {
+                if (!is_numeric($answer) || $answer <= 0 || !preg_match('/^[0-9]+$/', $answer)) {
+                    throw new \RuntimeException(
+                        'The price must a natural number above 0!'
+                    );
+                }
+                return $answer;
+            }); 
+            $quantity_question->setMaxAttempts(3);
             $quantity_to_update = $helper->ask($input, $output, $quantity_question);
             
             if($quantity_to_update > 0)
@@ -246,9 +256,9 @@ class Cart extends SymfonyCommand
                     
                 }
             
-                file_put_contents('src/Files/data.txt', $data);
+                file_put_contents('src/Files/data.txt', $data);    // Put new product string to text file
                 
-                $this->productTable($output);
+                $this->productTable($output);  // Show a table of all products
 
                 $message = sprintf("Product '%s' has been updated!", $id_to_update);
             }
@@ -262,7 +272,7 @@ class Cart extends SymfonyCommand
         $output->writeln([$message, '', 'Total: '.$this->getBalance()]);
     }
 
-    // Read file of supported currencies into array
+    // Reads file of supported currencies into array
     private function getCurrencies()
     {
         $data = file_get_contents('src/Files/supported_currencies.txt');
@@ -271,12 +281,12 @@ class Cart extends SymfonyCommand
         unset($data[count($data)-1]);
 
         $currency_array = array();
-
         foreach($data as $row)
         $currency_array[] = explode(';', $row);
 
         return $currency_array;
     }
+
     // Add a new currency to supported currencies
     protected function addCurrency(InputInterface $input, OutputInterface $output)
     {
@@ -288,19 +298,21 @@ class Cart extends SymfonyCommand
         $this->saveCurrency($new_currency);
 
         $message = sprintf("%s is now a supported currency!", $currency);
-
         $output->writeln($message);
     }
+
+    // Save new currency to text file
     private function saveCurrency($new_currency)
     {
         $data = file_get_contents('src/Files/supported_currencies.txt');
 
         $new_entry = $new_currency['currency'].';'.$new_currency['rate'].PHP_EOL;
-
         $data .= $new_entry;
         
         file_put_contents('src/Files/supported_currencies.txt', $data);
     }
+
+    // Outputs a table of supported currencies
     protected function showSupportedCurrencies(InputInterface $input, OutputInterface $output)
     {
         $currencies = $this->getCurrencies();
