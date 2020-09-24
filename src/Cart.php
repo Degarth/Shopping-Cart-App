@@ -34,7 +34,7 @@ class Cart extends SymfonyCommand
     private function getProducts()
     {
         $data = file_get_contents('src/Files/data.txt');
-        $data = explode(PHP_EOL, $data);   //preg_split('/\n|\r\n?/', $data);
+        $data = preg_split('/\n|\r\n?/', $data); //explode(PHP_EOL, $data);
         
         unset($data[count($data)-1]);
 
@@ -272,7 +272,7 @@ class Cart extends SymfonyCommand
     {
         $data = file_get_contents('src/Files/supported_currencies.txt');
         
-        $data = explode(PHP_EOL, $data);
+        $data = preg_split('/\n|\r\n?/', $data);  //explode(PHP_EOL, $data);
         unset($data[count($data)-1]);
 
         $currency_array = array();
