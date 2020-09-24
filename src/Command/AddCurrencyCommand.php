@@ -9,20 +9,20 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class CurrencyCommand extends Cart
+class AddCurrencyCommand extends Cart
 {
     protected function configure()
     {
-        $this->setName('currency')
+        $this->setName('new-currency')
             ->setDescription('Change cart\'s currency')
             ->setHelp('This command changes the currency of the cart')
             ->addArgument('currency', InputArgument::REQUIRED, 'New currency.')
-            ->addArgument('rate', InputArgument::REQUIRED, 'Exchange rate.');
+            ->addArgument('rate', InputArgument::REQUIRED, 'Exchange ratecu.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->changeCurrency($input, $output);
+        $this->addCurrency($input, $output);
         
         return 0;
     }

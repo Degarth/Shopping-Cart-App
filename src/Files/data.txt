@@ -1,9 +1,6 @@
-mbp1;Macbook Pro;1;10;EUR
-zen1;Asus Zenbook;1;10;USD
-mbp2;Macbook Pro;1;10;GBP
-zen2;Asus Zenbook;-1;;
-len;Lenovo P1;1;10;USD
-zen3;Asus Zenbook;1;10;EUR
-akd;Lord of the Rings;1;10;GBP
-tiv;Steel Sword;-1;10;USD
-dfg;Magnacarta;1;10.00;GBP
+loT;Lord of the Rings;100;9.99;GBP
+tiv;Steel Sword;-1;;
+Mgn;Magnacarta;1;10.00;GBP
+good;SpaceBook;5;12.70;EUR
+par;Parrot;10;6.45;GBP
+hob;Hobbit;4;8.20;USD

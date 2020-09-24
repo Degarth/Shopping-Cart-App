@@ -5,16 +5,18 @@
 require_once __DIR__ . '/vendor/autoload.php';
 
 use Symfony\Component\Console\Application;
-use App\Command\ShowCommand;
-use App\Command\AddCommand;
-use App\Command\RemoveCommand;
-use App\Command\UpdateCommand;
-use App\Command\CurrencyCommand;
+use App\Command\ShowCartCommand;
+use App\Command\AddProductCommand;
+use App\Command\RemoveProductCommand;
+use App\Command\UpdateProductCommand;
+use App\Command\AddCurrencyCommand;
+use App\Command\ShowCurrenciesCommand;
 
 $app = new Application();
-$app->add(new ShowCommand());
-$app->add(new AddCommand());
-$app->add(new RemoveCommand());
-$app->add(new UpdateCommand());
-$app->add(new CurrencyCommand());
+$app->add(new ShowCartCommand());
+$app->add(new AddProductCommand());
+$app->add(new RemoveProductCommand());
+$app->add(new UpdateProductCommand());
+$app->add(new AddCurrencyCommand());
+$app->add(new ShowCurrenciesCommand());
 $app->run();

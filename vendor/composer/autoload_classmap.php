@@ -6,8 +6,13 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    'App\\Command\\Command' => $baseDir . '/src/Product.php',
-    'App\\Command\\ShowCommand' => $baseDir . '/src/Command/ShowCommand.php',
+    'App\\Cart' => $baseDir . '/src/Cart.php',
+    'App\\Command\\AddCurrencyCommand' => $baseDir . '/src/Command/AddCurrencyCommand.php',
+    'App\\Command\\AddProductCommand' => $baseDir . '/src/Command/AddProductCommand.php',
+    'App\\Command\\RemoveProductCommand' => $baseDir . '/src/Command/RemoveProductCommand.php',
+    'App\\Command\\ShowCartCommand' => $baseDir . '/src/Command/ShowCartCommand.php',
+    'App\\Command\\ShowCurrenciesCommand' => $baseDir . '/src/Command/ShowCurrenciesCommand.php',
+    'App\\Command\\UpdateProductCommand' => $baseDir . '/src/Command/UpdateProductCommand.php',
     'JsonException' => $vendorDir . '/symfony/polyfill-php73/Resources/stubs/JsonException.php',
     'Normalizer' => $vendorDir . '/symfony/polyfill-intl-normalizer/Resources/stubs/Normalizer.php',
     'Psr\\Container\\ContainerExceptionInterface' => $vendorDir . '/psr/container/src/ContainerExceptionInterface.php',

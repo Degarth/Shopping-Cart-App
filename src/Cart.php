@@ -16,6 +16,7 @@ class Cart extends SymfonyCommand
     {
         parent::__construct();
     }
+
     // Shows cart and balance
     protected function showCart(InputInterface $input, OutputInterface $output)
     {
@@ -28,7 +29,8 @@ class Cart extends SymfonyCommand
 
         $output->writeln(['Total: '.$this->getBalance()]);
     }
-    // Get product array
+
+    // Read file and put products into array
     private function getProducts()
     {
         $data = file_get_contents('src/Files/data.txt');
@@ -43,22 +45,8 @@ class Cart extends SymfonyCommand
 
         return $final_array;
     }
-    private function getCurrencies()
-    {
-        $data = file_get_contents('src/Files/supported_currency.txt');
-        
-        $data = explode(PHP_EOL, $data);
-        unset($data[count($data)-1]);
-
-        $currency_array = array();
-
-        foreach($data as $row)
-        $currency_array[] = explode(';', $row);
-
-        return $currency_array;
-    }
     
-    // Calculate cart's total
+    // Calculate cart's total 
     private function getBalance()
     {
         $products = $this->getProducts();
@@ -95,36 +83,85 @@ class Cart extends SymfonyCommand
 
         return $output->writeln(['']).$table->render().$output->writeln(['']);
     }
+
      // Add item to cart
     protected function addToCart(InputInterface $input, OutputInterface $output)
     {
         $output->writeln(['', '======== Adding new product to cart ========','']);
 
         $helper = $this->getHelper('question');
+
+        // ID input
         $id_question = new Question("Product id: ", "missing"); 
+        $id_question->setValidator(function ($answer) {
+            $ids = array_column($this->getProducts(), 0);
+            if (in_array($answer, $ids)) {
+                throw new \RuntimeException(
+                    'This ID is used by another product!'
+                );
+            }
+            return $answer;
+        }); 
+        $id_question->setMaxAttempts(3);
         $id = $helper->ask($input, $output, $id_question);
 
+        // Name input
         $name_question = new Question("Product name: ", "missing"); 
         $name = $helper->ask($input, $output, $name_question);
 
+        // Quantity input
         $quantity_question = new Question("Product quantity: ", "missing"); 
+        $quantity_question->setValidator(function ($answer) {
+            if (!is_numeric($answer) || $answer <= 0 || !preg_match('/^[0-9]+$/', $answer)) {
+                throw new \RuntimeException(
+                    'The price must a natural number above 0!'
+                );
+            }
+            return $answer;
+        }); 
+        $quantity_question->setMaxAttempts(3);
         $quantity = $helper->ask($input, $output, $quantity_question);
 
-        $price_question = new Question("Product price: ", "missing"); 
+        // Price input
+        $price_question = new Question("Product price (bigger than 0): ", "missing"); 
+        $price_question->setValidator(function ($answer) {
+            if (!is_numeric($answer) || $answer <= 0) {
+                throw new \RuntimeException(
+                    'The price must a number above 0!'
+                );
+            }
+            return $answer;
+        }); 
+        $price_question->setMaxAttempts(3);
         $price = $helper->ask($input, $output, $price_question);
 
-        $currency_question = new Question("Product currency (EUR, USD, GBP): ", "missing"); 
+        // Currency input
+        $currency_question = new Question("Product currency (EUR, USD, GBP): ", "missing");
+        $currency_question->setValidator(function ($answer) {
+            $supp_currencies = array_column($this->getCurrencies(), 0);
+            $supp_string = '';
+            foreach($supp_currencies as $s)
+                $supp_string .= $s.' ';
+            if (!in_array($answer, $supp_currencies)) {
+                throw new \RuntimeException(
+                    'The currency you entered is not supported! Supported currencies - '.$supp_string.''
+                );
+            }
+            return $answer;
+        }); 
+        $currency_question->setMaxAttempts(3);
         $currency = $helper->ask($input, $output, $currency_question);
 
         $new_product = array('id'=>$id, 'name'=>$name, 'quantity'=>$quantity, 'price'=>$price, 'currency'=>$currency);
         
-        $this->saveProduct($new_product);
+        $this->saveProduct($new_product);   // Save product to file
 
-        $this->productTable($output);
+        $this->productTable($output);      // Show all products, new product included
         
-        $output->writeln(['Product has been added to your cart!', '']);
-        $output->writeln(['Total: '.$this->getBalance()]);
+        $output->writeln(['Product has been added to your cart!', '', 'Total: '.$this->getBalance()]);
     }
+
+    // Save product to file
     private function saveProduct($new_product)
     {
         $data = file_get_contents('src/Files/data.txt');
@@ -137,7 +174,7 @@ class Cart extends SymfonyCommand
         file_put_contents('src/Files/data.txt', $data);
     }
     
-    // Removes a product by id
+    // Remove a product from a cart by id and change the quantity to -1
     protected function removeFromCart(InputInterface $input, OutputInterface $output)
     {
         $products = $this->getProducts();
@@ -157,8 +194,11 @@ class Cart extends SymfonyCommand
         {
             $data = '';
             for($i = 0; $i < count($products); $i++) {
-                if($ids[$i] == $id_to_delete)
+                if($ids[$i] == $id_to_delete) {
                     $quantity[$i] = -1;
+                    $price[$i] = '';
+                    $currency[$i] = '';
+                }
                 $data .= $ids[$i].';'.$name[$i].';'.$quantity[$i].';'.$price[$i].';'.$currency[$i].PHP_EOL;
                 
             }
@@ -174,7 +214,8 @@ class Cart extends SymfonyCommand
 
         $output->writeln($message);
     }
-    // Update a product in the cart
+
+    // Update a product in the cart by changing the quantity
     protected function updateCart(InputInterface $input, OutputInterface $output)
     {
         $products = $this->getProducts();
@@ -218,8 +259,23 @@ class Cart extends SymfonyCommand
         else
             $message = sprintf("Product with ID '%s' not found!", $id_to_update);
 
-        $output->writeln($message);
-        $output->writeln(['Total: '.$this->getBalance()]);
+        $output->writeln([$message, '', 'Total: '.$this->getBalance()]);
+    }
+
+    // Read file of supported currencies into array
+    private function getCurrencies()
+    {
+        $data = file_get_contents('src/Files/supported_currencies.txt');
+        
+        $data = explode(PHP_EOL, $data);
+        unset($data[count($data)-1]);
+
+        $currency_array = array();
+
+        foreach($data as $row)
+        $currency_array[] = explode(';', $row);
+
+        return $currency_array;
     }
     // Add a new currency to supported currencies
     protected function addCurrency(InputInterface $input, OutputInterface $output)
@@ -227,7 +283,7 @@ class Cart extends SymfonyCommand
         $currency = $input->getArgument('currency');
         $rate = $input->getArgument('rate');
         
-        $new_currency = array('currency'=>$id, 'rate'=>$name);
+        $new_currency = array('currency'=>$currency, 'rate'=>$rate);
         
         $this->saveCurrency($new_currency);
 
@@ -244,5 +300,14 @@ class Cart extends SymfonyCommand
         $data .= $new_entry;
         
         file_put_contents('src/Files/supported_currencies.txt', $data);
+    }
+    protected function showSupportedCurrencies(InputInterface $input, OutputInterface $output)
+    {
+        $currencies = $this->getCurrencies();
+        
+        $table = new Table($output);
+        $table->setHeaders(['Currency', 'Exchange Rate'])->setRows($currencies);
+
+        return $table->render();
     }
 }

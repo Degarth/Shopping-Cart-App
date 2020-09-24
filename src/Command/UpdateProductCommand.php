@@ -8,18 +8,18 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class AddCommand extends Cart
+class UpdateProductCommand extends Cart
 {
     protected function configure()
     {
-        $this->setName('add')
-            ->setDescription('Add a product to the cart')
-            ->setHelp('This command adds a product to the cart');
+        $this->setName('update')
+            ->setDescription('update a product in the cart')
+            ->setHelp('This command updates a product in the cart');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->addToCart($input, $output);
+        $this->updateCart($input, $output);
         
         return 0;
     }

@@ -87,8 +87,13 @@ class ComposerStaticInit8c3578711cf9245a87ec2b06beb77d34
     );
 
     public static $classMap = array (
-        'App\\Command\\Command' => __DIR__ . '/../..' . '/src/Product.php',
-        'App\\Command\\ShowCommand' => __DIR__ . '/../..' . '/src/Command/ShowCommand.php',
+        'App\\Cart' => __DIR__ . '/../..' . '/src/Cart.php',
+        'App\\Command\\AddCurrencyCommand' => __DIR__ . '/../..' . '/src/Command/AddCurrencyCommand.php',
+        'App\\Command\\AddProductCommand' => __DIR__ . '/../..' . '/src/Command/AddProductCommand.php',
+        'App\\Command\\RemoveProductCommand' => __DIR__ . '/../..' . '/src/Command/RemoveProductCommand.php',
+        'App\\Command\\ShowCartCommand' => __DIR__ . '/../..' . '/src/Command/ShowCartCommand.php',
+        'App\\Command\\ShowCurrenciesCommand' => __DIR__ . '/../..' . '/src/Command/ShowCurrenciesCommand.php',
+        'App\\Command\\UpdateProductCommand' => __DIR__ . '/../..' . '/src/Command/UpdateProductCommand.php',
         'JsonException' => __DIR__ . '/..' . '/symfony/polyfill-php73/Resources/stubs/JsonException.php',
         'Normalizer' => __DIR__ . '/..' . '/symfony/polyfill-intl-normalizer/Resources/stubs/Normalizer.php',
         'Psr\\Container\\ContainerExceptionInterface' => __DIR__ . '/..' . '/psr/container/src/ContainerExceptionInterface.php',
