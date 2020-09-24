@@ -17,6 +17,20 @@ class Cart extends SymfonyCommand
         parent::__construct();
     }
 
+    private function getUserAgent()   // For file_get_contents
+    {
+        $opts = [
+            'http' => [
+                'method' => 'GET',
+                'header' => [
+                        'User-Agent: PHP'
+                ]
+            ]
+        ];
+        $context = stream_context_create($opts);
+        return $context;
+    }
+
     // Shows cart and balance
     protected function showCart(InputInterface $input, OutputInterface $output)
     {
@@ -33,7 +47,7 @@ class Cart extends SymfonyCommand
     // Read file and put products into array
     private function getProducts()
     {
-        $data = file_get_contents('src/Files/data.txt');
+        $data = file_get_contents('src/Files/data.txt', false, $this->getUserAgent());
         $data = explode(PHP_EOL, $data);   //preg_split('/\n|\r\n?/', $data);
         
         unset($data[count($data)-1]);
