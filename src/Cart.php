@@ -38,25 +38,25 @@ class Cart extends SymfonyCommand
         
         unset($data[count($data)-1]);
 
-        $final_array = array();
+        $product_array = array();
 
         foreach($data as $row)
-            $final_array[] = explode(';', $row);
+            $product_array[] = explode(';', $row);
 
-        return $final_array;
+        return $product_array;
     }
     
     // Calculate cart's total 
     private function getBalance()
     {
         $products = $this->getProducts();
-        $quantity = array_column($products, 2);
-        $price = array_column($products, 3);
-        $item_currency = array_column($products, 4);
+        $quantity = array_column($products, 2);          // Quantity array
+        $price = array_column($products, 3);             // Price array
+        $item_currency = array_column($products, 4);     // Currency array
         
         $supported_currencies = $this->getCurrencies();
-        $supp_currency = array_column($supported_currencies, 0);
-        $rate = array_column($supported_currencies, 1);
+        $supp_currency = array_column($supported_currencies, 0);    // Currency name array
+        $rate = array_column($supported_currencies, 1);             // Currency exchange rate
         
         $sum = 0;
 
@@ -149,7 +149,7 @@ class Cart extends SymfonyCommand
         $currency_question->setMaxAttempts(3);
         $currency = $helper->ask($input, $output, $currency_question);
 
-        $new_product = array('id'=>$id, 'name'=>$name, 'quantity'=>$quantity, 'price'=>$price, 'currency'=>$currency);
+        $new_product = array('id'=>$id, 'name'=>$name, 'quantity'=>$quantity, 'price'=>sprintf('%0.2f', $price), 'currency'=>$currency);
         $this->saveProduct($new_product);   // Save product to file
         $this->productTable($output);      // Show all products, new product included
         

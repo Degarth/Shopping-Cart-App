@@ -4,4 +4,3 @@ Mgn;Magnacarta;1;10.00;GBP
 good;SpaceBook;5;12.70;EUR
 par;Parrot;10;6.45;GBP
 hob;Hobbit;4;8.20;USD
-asd;asd;10;10;EUR
