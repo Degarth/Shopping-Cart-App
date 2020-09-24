@@ -16,7 +16,8 @@ class CurrencyCommand extends Cart
         $this->setName('currency')
             ->setDescription('Change cart\'s currency')
             ->setHelp('This command changes the currency of the cart')
-            ->addArgument('currency', InputArgument::REQUIRED, 'New currency.');
+            ->addArgument('currency', InputArgument::REQUIRED, 'New currency.')
+            ->addArgument('rate', InputArgument::REQUIRED, 'Exchange rate.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
