@@ -8,7 +8,7 @@ php console.php add                               // Add a new product to the ca
 php console.php update                            // Update the quantity of a product
 php console.php remove                            // Remove a product from the cart
 php console.php currencies                        // Show a table of supported currencies
-php console.php new-currency 'name' 'rate'        /* Add a new currency to be supported,
+php console.php new-currency 'name' 'rate'        /* Add a new currency to the supported currency list,
                                                      Enter new currency name and rate inline with the command*/
 ```
 ## Technical Requirements
