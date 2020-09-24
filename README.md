@@ -1,5 +1,9 @@
 # Shopping-Cart-App
 
+## Commands
+
+php console.php - Shows a list of commands
+
 ## Technical Requirements
 
 - PHP7 +
