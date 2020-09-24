@@ -1,9 +1,15 @@
 # Shopping-Cart-App
 
 ## Commands
-
-php console.php - Shows a list of commands
-
+```
+php console.php                                   // Shows a list of commands
+php console.php cart                              // Shows a table of products and balance
+php console.php add                               // Add a new product to the cart
+php console.php update                            // Update the quantity of a product
+php console.php remove                            // Remove a product from the cart
+php console.php currencies                        // Show a table of supported currencies
+php console.php new-currency 'name' 'rate'        // Add a new currency to be supported, enter new currency name and rate inline with the command
+```
 ## Technical Requirements
 
 - PHP7 +
