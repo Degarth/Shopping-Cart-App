@@ -135,16 +135,13 @@ class Cart extends SymfonyCommand
         $price_question->setMaxAttempts(3);
         $price = $helper->ask($input, $output, $price_question);
 
-        // Currency input
-        $currency_question = new Question("Product currency (EUR, USD, GBP): ", "missing");
+        // Currency input      
+        $currency_question = new Question("Product currency (".$this->getSupportedCurrencyNames()."): ", "missing");
         $currency_question->setValidator(function ($answer) {
             $supp_currencies = array_column($this->getCurrencies(), 0);
-            $supp_string = '';
-            foreach($supp_currencies as $s)
-                $supp_string .= $s.' ';
             if (!in_array($answer, $supp_currencies)) {
                 throw new \RuntimeException(
-                    'The currency you entered is not supported! Supported currencies - '.$supp_string.''
+                    'The currency you entered is not supported! Supported currencies - '.$this->getSupportedCurrencyNames().''
                 );
             }
             return $answer;
@@ -153,9 +150,7 @@ class Cart extends SymfonyCommand
         $currency = $helper->ask($input, $output, $currency_question);
 
         $new_product = array('id'=>$id, 'name'=>$name, 'quantity'=>$quantity, 'price'=>$price, 'currency'=>$currency);
-        
         $this->saveProduct($new_product);   // Save product to file
-
         $this->productTable($output);      // Show all products, new product included
         
         $output->writeln(['Product has been added to your cart!', '', 'Total: '.$this->getBalance()]);
@@ -321,5 +316,17 @@ class Cart extends SymfonyCommand
         $table->setHeaders(['Currency', 'Exchange Rate'])->setRows($currencies);
 
         return $table->render();
+    }
+    private function getSupportedCurrencyNames()
+    {
+        $supp_currencies = array_column($this->getCurrencies(), 0);
+        $supp_string = '';
+        foreach($supp_currencies as $s => $name) {
+            if ($s === array_key_last($supp_currencies))
+                $supp_string .= $name;
+            else
+                $supp_string .= $name.', ';
+        }
+        return $supp_string;
     }
 }
